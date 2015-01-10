@@ -23,20 +23,43 @@ class SlackIncommingWebHookSenderTest(LogCollectionTestCase):
             'icon_emoji': ':ghost:',
             }
         return Pit.get(
-            'logcollection-test-slack',
+            'logcollection-test-slack-webhook',
             {'require': setting},
             )
 
     def _target(self):
-        from . import SlackIncomingWebHookSender
+        from . import SlackIncomingWebHookSender as sender_class
         setting = self._setting()
-        return SlackIncomingWebHookSender(**setting)
+        return sender_class(**setting)
 
     def _call(self, *args, **kwds):
         target = self._target()
         return target.send(*args, **kwds)
 
-    def _test_send(self):
+    def test_send(self):
+        self._call('test message')
+
+
+class SlackAPIChatPostMessageSenderTest(SlackIncommingWebHookSenderTest):
+    def _setting(self):
+        from pit import Pit
+        setting = {
+            'token': '',
+            'channel': '#general',
+            'username': '',
+            'icon_emoji': ':ghost:',
+            }
+        return Pit.get(
+            'logcollection-test-slack-api',
+            {'require': setting},
+            )
+
+    def _target(self):
+        from . import SlackAPIChatPostMessageSender as sender_class
+        setting = self._setting()
+        return sender_class(**setting)
+
+    def test_send(self):
         self._call('test message')
 
 

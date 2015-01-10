@@ -28,6 +28,36 @@ from zope.interface import (
     )
 
 
+class SlackAPIChatPostMessageSender(object):
+    api_url = 'https://slack.com/api/chat.postMessage'
+
+    def __init__(self, token, channel, username, icon_emoji=':gohst'):
+        self._token = token
+        self._url = self.api_url
+        self._channel = channel
+        self._username = username
+        self._icon_emoji = icon_emoji
+
+    def connect(self):
+        pass
+
+    def build(self, msg):
+        return {
+            'token': self._token,
+            'channel': self._channel,
+            'username': self._username,
+            'icon_emoji': self._icon_emoji,
+            'text': msg,
+            }
+
+    def send(self, msg):
+        params = self.build(msg)
+        return requests.post(self._url, params=params, verify=False)
+
+    def close(self):
+        pass
+
+
 class SlackIncomingWebHookSender(object):
     api_url = 'https://{}/services/hooks/incoming-webhook?token={}'
 
