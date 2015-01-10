@@ -26,6 +26,7 @@ from zope.interface import (
     implementer,
     Interface,
     )
+import fluent.sender
 
 
 class SlackAPIChatPostMessageSender(object):
@@ -117,7 +118,9 @@ class HipChatSender(object):
             }
 
     def send(self, msg):
+
         req = self.build(msg)
+        self._send(req)
         return self._conn.method(
             self._api,
             self._method,
@@ -127,6 +130,23 @@ class HipChatSender(object):
 
     def close(self):
         pass
+
+
+class FluentSender(fluent.sender.FluentSender):
+    def connect(self):
+        self._reconnect()
+
+    def build(self, msg):
+        label = None
+        timestamp = None
+        return self._make_packet(label, timestamp, msg)
+
+    def send(self, msg):
+        bytes_ = self.build(msg)
+        return self._send(bytes_)
+
+    def close(self):
+        self._close()
 
 
 class LogCollectionHandler(logging.Handler):
