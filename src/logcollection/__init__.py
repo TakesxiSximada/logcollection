@@ -56,6 +56,49 @@ class SlackIncomingWebHookSender(object):
         pass
 
 
+class HipChatSender(object):
+    def __init__(self,
+                 room_id,
+                 token,
+                 timeout=10,
+                 notify=0,
+                 message_format='text',
+                 api='rooms/messages',
+                 method='POST',
+                 ):
+        self._api = api
+        self._method = method
+        self._timeout = timeout
+        self._notify = notify
+        self._conn = None
+
+    def connect(self):
+        import hipchat
+        if not self._conn:
+            self._conn = hipchat.HipChat(token=self._token)
+
+    def build(self, msg):
+        return {
+            'room_id': self._room_id,
+            'from': 'dummy',
+            'message': msg,
+            'message_format': self._message_format,
+            'notify': self._notify,
+            }
+
+    def send(self, msg):
+        req = self.build(msg)
+        return self._conn.method(
+            self._api,
+            self._method,
+            req,
+            timetout=self._timetout,
+            )
+
+    def close(self):
+        pass
+
+
 class LogCollectionHandler(logging.Handler):
     def __init__(self, level, sender_name, *args, **kwds):
         super(LogCollectionHandler, self).__init__(level)
