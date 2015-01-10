@@ -88,8 +88,8 @@ class SlackIncomingWebHookSender(object):
 
 class HipChatSender(object):
     def __init__(self,
-                 room_id,
                  token,
+                 room_id,
                  timeout=10,
                  notify=0,
                  message_format='text',
@@ -130,8 +130,8 @@ class HipChatSender(object):
 
 
 class LogCollectionHandler(logging.Handler):
-    def __init__(self, level, sender_name, *args, **kwds):
-        super(LogCollectionHandler, self).__init__(level)
+    def __init__(self, sender_name, *args, **kwds):
+        super(LogCollectionHandler, self).__init__()
         self._sender_name = sender_name
         self._args = args
         self._kwds = kwds
