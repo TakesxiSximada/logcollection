@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-- Slack
-- Hipchat
+- Slack -> ok
+- Hipchat -> ok
 - Chatwork
 - Skype
 - LINE
