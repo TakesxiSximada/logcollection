@@ -21,7 +21,7 @@ import json
 import logging
 
 import requests
-import zope.dottedname
+import zope.dottedname.resolve
 from zope.interface import (
     implementer,
     Interface,
@@ -37,7 +37,7 @@ class SlackIncomingWebHookSender(object):
         self._username = username
         self._icon_emoji = icon_emoji
 
-    def conenct(self):
+    def connect(self):
         pass
 
     def build(self, msg):
@@ -57,7 +57,8 @@ class SlackIncomingWebHookSender(object):
 
 
 class LogCollectionHandler(logging.Handler):
-    def __init__(self, sender_name, *args, **kwds):
+    def __init__(self, level, sender_name, *args, **kwds):
+        super(LogCollectionHandler, self).__init__(level)
         self._sender_name = sender_name
         self._args = args
         self._kwds = kwds
@@ -66,18 +67,18 @@ class LogCollectionHandler(logging.Handler):
 
     def connect(self):
         if not self._conn:
-            klass = zope.dottedname.resolve(self._sender_name)
-            self._conn = klass(*self._argrs, **self._kwds)
+            klass = zope.dottedname.resolve.resolve(self._sender_name)
+            self._conn = klass(*self._args, **self._kwds)
         self._conn.connect()
 
     def emit(self, record):
         msg = self.format(record)
-        self._sender.send(msg)
+        self._conn.send(msg)
 
     def close(self):
         self.aquire()
         try:
-            self._sender.close()
+            self._conn.close()
             super(LogCollectionHandler, self).close()
         finally:
             self.release()
