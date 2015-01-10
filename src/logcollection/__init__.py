@@ -29,10 +29,13 @@ from zope.interface import (
 
 
 class SlackIncomingWebHookSender(object):
-    def __init__(self, url, channel, username):
-        self._url = url
+    api_url = 'https://{}/services/hooks/incoming-webhook?token={}'
+
+    def __init__(self, domain, token, channel, username, icon_emoji=':gohst'):
+        self._url = self.api_url.format(domain, token)
         self._channel = channel
         self._username = username
+        self._icon_emoji = icon_emoji
 
     def conenct(self):
         pass
@@ -41,7 +44,8 @@ class SlackIncomingWebHookSender(object):
         return json.dumps({
             'channel': self._channel,
             'username': self._username,
-            'message': msg,
+            'icon_emoji': self._icon_emoji,
+            'text': msg,
             })
 
     def send(self, msg):
