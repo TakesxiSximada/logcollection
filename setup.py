@@ -15,7 +15,12 @@ def find_package_data(target, package_root):
         ]
 
 src = 'src'
-install_requires = []
+install_requires = [
+    'requests',
+    'hipchat',
+    'python-redmine',
+    'fluent-logger',
+    ]
 test_require = []
 packages = find_packages(src)
 package_dir = {'': src}
