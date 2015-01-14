@@ -5,7 +5,7 @@
 - Chatwork
 - Skype
 - LINE
-- Fluentd
+- Fluentd -> ok
 - Facebook
 - Goolge Chat
 - Lingr
@@ -13,7 +13,7 @@
 - Twitter
 - Github Issues
 - Butbicket Issues
-- Redmine Issues
+- Redmine Issues -> ok
 - Pastebin
 - Errbit
 """
@@ -190,7 +190,6 @@ class FluentSender(fluent.sender.FluentSender):
 
 
 class LogCollectionHandler(logging.Handler):
-
     def __init__(self, sender_name, *args, **kwds):
         super(LogCollectionHandler, self).__init__()
         self._sender_name = sender_name
