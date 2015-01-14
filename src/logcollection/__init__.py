@@ -22,6 +22,7 @@ import logging
 
 import requests
 import zope.dottedname.resolve
+import zope.interface
 from zope.interface import (
     implementer,
     Interface,
@@ -187,6 +188,13 @@ class FluentSender(fluent.sender.FluentSender):
     def close(self):
         self._close()
 
+key_sender = {
+    'slack-webhook': SlackIncomingWebHookSender,
+    'slack-api': SlackAPIChatPostMessageSender,
+    'hipcaht': HipChatSender,
+    'fluent': FluentSender,
+    'redmine': RedmineSender,
+    }
 
 
 class LogCollectionHandler(logging.Handler):
@@ -200,7 +208,8 @@ class LogCollectionHandler(logging.Handler):
 
     def connect(self):
         if not self._conn:
-            klass = zope.dottedname.resolve.resolve(self._sender_name)
+            klass = key_sender.get(self._sender_name, None) or \
+                zope.dottedname.resolve.resolve(self._sender_name)
             self._conn = klass(*self._args, **self._kwds)
         self._conn.connect()
 
