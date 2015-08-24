@@ -29,7 +29,7 @@ package_data = {}
 
 setup(
     name='logcollection',
-    version='0,1,0',
+    version='0.2.0',
     url='https://github.com/TakesxiSximada/logcollection',
     download_url='https://github.com/TakesxiSximada/logcollection/archive/master.zip',
     license='See http://www.python.org/3.4/license.html',
